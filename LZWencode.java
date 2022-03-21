@@ -76,7 +76,7 @@ public class LZWencode {
             System.out.print("\n");
             bis.close();
 
-        } catch (exception e) {
+        } catch (Exception e) {
             System.err.println(e);
         }
     }
