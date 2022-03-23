@@ -16,7 +16,7 @@ class Trie {
         private ArrayList<TrieNode> _children = new ArrayList<TrieNode>();
         private boolean _isLeaf;
         private int _phraseNumber;
-        private int _phraseNibble;
+        private byte _phraseNibble;
 
         /**
          * Constructor
@@ -33,13 +33,13 @@ class Trie {
          * 
          * Used to instatiate
          * 
-         * @param hexNibble
+         * @param phraseNibble
          * @param phraseNumber
          */
-        TrieNode(int hexNibble, int phraseNumber) {
+        TrieNode(byte phraseNibble, int phraseNumber) {
             _totalNodes++;
             _isLeaf = false;
-            _phraseNibble = hexNibble;
+            _phraseNibble = phraseNibble;
             _phraseNumber = phraseNumber;
 
         }
@@ -52,7 +52,7 @@ class Trie {
             return _phraseNumber;
         }
 
-        public int getPhraseHexDigit() {
+        public byte getPhraseNibble() {
             return _phraseNibble;
         }
 
@@ -60,8 +60,8 @@ class Trie {
             return _isLeaf;
         }
 
-        public void setChildren(int hexDigit) {
-            _children.add(new TrieNode(hexDigit, _totalNodes));
+        public void setChildren(byte nibble) {
+            _children.add(new TrieNode(nibble, _totalNodes));
             this._isLeaf = false;
         }
     }
@@ -79,18 +79,15 @@ class Trie {
 
         // initialize trie with expected symbols
         for (int i = 0; i < HEX_SET; i++) {
-
-            _root.setChildren(i);
+            _root.setChildren((byte) i);
         }
     }
 
-    public TrieNode search(int nibble, TrieNode currNode) {
-
-        System.out.println("Nibble = " + nibble);
+    public TrieNode search(int currNibble, TrieNode currNode) {
 
         // search if one of its children has the key
         for (int i = 0; i < currNode.getChildren().size(); i++) {
-            if (currNode.getChildren().get(i).getPhraseHexDigit() == nibble)
+            if (currNode.getChildren().get(i).getPhraseNibble() == currNibble)
                 return currNode.getChildren().get(i);
         }
 
@@ -102,8 +99,10 @@ class Trie {
         int testChar;
         int testNum;
 
+        System.out.println("----Dictionary (Trie)----");
+
         for (int i = 0; i < _root.getChildren().size(); i++) {
-            testChar = _root.getChildren().get(i).getPhraseHexDigit();
+            testChar = _root.getChildren().get(i).getPhraseNibble();
             testNum = _root.getChildren().get(i).getPhraseNum();
 
             String stx = String.format("%2X", testChar);
@@ -116,7 +115,7 @@ class Trie {
         return _root;
     }
 
-    public void insert(int hexDigit, TrieNode parentNode) {
-        parentNode.setChildren(hexDigit);
+    public void insert(byte childNibble, TrieNode parentNode) {
+        parentNode.setChildren(childNibble);
     }
 }
