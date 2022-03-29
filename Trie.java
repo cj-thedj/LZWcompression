@@ -78,9 +78,8 @@ class Trie {
         _root = new TrieNode();
 
         // initialize trie with expected symbols
-        for (int i = 0; i < HEX_SET; i++) {
+        for (int i = 0; i < HEX_SET; i++)
             _root.setChildren((byte) i);
-        }
     }
 
     public TrieNode search(int currNibble, TrieNode currNode) {
@@ -92,23 +91,6 @@ class Trie {
         }
 
         return null;
-    }
-
-    // prints out all current nodes and associated phrases
-    public void print() {
-        int testChar;
-        int testNum;
-
-        System.out.println("----Dictionary (Trie)----");
-
-        for (int i = 0; i < _root.getChildren().size(); i++) {
-            testChar = _root.getChildren().get(i).getPhraseNibble();
-            testNum = _root.getChildren().get(i).getPhraseNum();
-
-            String stx = String.format("%2X", testChar);
-
-            System.out.println(stx + " = " + testNum);
-        }
     }
 
     public TrieNode getRoot() {

@@ -30,16 +30,7 @@ public class LZWencode {
 
                 nibbles.add(highNibble);
                 nibbles.add(lowNibble);
-
-                // // convert to a human-readable hex representation
-                // String highNibbleHex = String.format("%2X", highNibble);
-                // String lowNibbleHex = String.format("%2X", lowNibble);
-                // System.out.print(highNibbleHex + lowNibbleHex);
             }
-
-            // System.out.println("\n\n");
-            // trie.print();
-            // System.out.println("\n\n---Phrase Numbers---");
 
             tempNode = parentNode;
             byte tempNibble = 0;
