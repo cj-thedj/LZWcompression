@@ -2,23 +2,12 @@ import java.io.*;
 
 public class LZWunpack {
 
-    /**
-     * Declare Constant Variables
-     */
+    /* Declare Constants */
     static final int BYTE = 8; // number of bits in byte
     static final int INT = 32; // number of bits in integer
     static final int SHIFT = 24; // used to shift to either MSB or LSB
     static final int LSB_MASK = 0xff;
     static final int MSB_MASK = 0xff000000;
-
-    /**
-     * Main method for running bit packing
-     * 
-     * @param args
-     */
-    public static void main(String[] args) {
-        LZWunpack.unpack();
-    }
 
     /**
      * Performs bit packing for a list of phrase numbers.
@@ -31,15 +20,13 @@ public class LZWunpack {
          * Declare other variables
          */
         int maxPhraseNumber = 16; // 16 phrases (0-F) in the dictionary
-        int minBits = (int) Math.ceil((Math.log(maxPhraseNumber) / Math.log(2)));
+        int minBits = calculateMinBits(maxPhraseNumber);
         int totalBitsUnpacked = 0; // used to check the number of bits current stored
         int unpackingInt = 0;
         int output = 0;
 
         try {
-            /**
-             * Declare IO
-             */
+            /* Declare IO stream */
             FileInputStream fis = new FileInputStream(new File("packed.pack"));
             BufferedInputStream bis = new BufferedInputStream(fis);
             FileOutputStream fos = new FileOutputStream(new File("unpacked.txt"));
@@ -51,7 +38,8 @@ public class LZWunpack {
 
                 // ensure that we get the first byte of userful data
                 packedByte &= calculateMask(MSB_MASK);
-
+                
+                // every read is 8-bits
                 totalBitsUnpacked += BYTE;
                 unpackingInt |= packedByte << (INT - totalBitsUnpacked);
 
@@ -65,7 +53,7 @@ public class LZWunpack {
                     unpackingInt <<= minBits;
                     totalBitsUnpacked -= minBits;
 
-                    System.out.println(output + " : " + maxPhraseNumber);
+                    System.out.println(output);
                     maxPhraseNumber++;
                 }
 

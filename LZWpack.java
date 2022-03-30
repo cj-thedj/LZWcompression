@@ -18,22 +18,23 @@ public class LZWpack {
      */
     public static void main(String[] args) {
         LZWpack.pack();
+        System.out.print("------------------------------------------------\n");
+        LZWunpack.unpack();
     }
 
+    /**
+     * Performs bit packing
+     */
     public static void pack() {
-
-        /**
-         * Declare other variables
-         */
+        
+        /* Declare method variables */
         int maxPhraseNumber = 16; // 16 phrases (0-F) in the dictionary
-        int minBits = 0;
         int packingInt = 0; // hold data read in
         int totalBitsPacked = 0; // used to check the number of bits current stored
 
         try {
-            /**
-             * Declare IO
-             */
+
+            /* Declare IO streams */
             FileInputStream fis = new FileInputStream(new File("output.txt"));
             BufferedReader br = new BufferedReader(new InputStreamReader(fis));
             FileOutputStream fos = new FileOutputStream(new File("packed.pack"));
@@ -42,27 +43,23 @@ public class LZWpack {
             String line = br.readLine();
 
             while (line != null) { // continue until the EOF has been reached
+                
+                // get the integral value of the read phrase number
                 int phraseNumber = Integer.parseInt(line);
-
-                // calculate number of bits in phrase number
-                minBits = (int) Math.ceil((Math.log(maxPhraseNumber) / Math.log(2)));
-                System.out.println(phraseNumber + " : " + maxPhraseNumber + " bits: " + minBits);
+                
                 // track new bits added
-                totalBitsPacked += minBits;
+                totalBitsPacked += calculateMinBits(++maxPhraseNumber);
 
                 // copy packed phrase number to the output buffer
                 packingInt |= phraseNumber << (INT - totalBitsPacked);
 
-                int mask = (int) (Math.pow(2, totalBitsPacked) - 1) << (INT -
-                        totalBitsPacked);
-                packingInt &= mask;
-
-                maxPhraseNumber++;
-
+                // 
+                packingInt &= calculateMask(totalBitsPacked);
+                
                 while (totalBitsPacked >= BYTE) { // there is a byte to output
-
+                    
                     fos.write(outputByte(packingInt));
-
+                    
                     // shift the next byte to most significant position
                     packingInt <<= BYTE;
                     totalBitsPacked -= BYTE;
@@ -95,6 +92,16 @@ public class LZWpack {
         // move byte to least significant position
         outputInt >>>= SHIFT;
 
+        //System.out.println(Integer.toBinaryString(outputInt));
+
         return (byte) outputInt;
+    }
+
+    private static int calculateMinBits(int k) {
+        return (int) Math.ceil((Math.log(k) / Math.log(2)));
+    }
+
+    private static int calculateMask(int n) {
+        return (int) (Math.pow(2, n) - 1) << (INT - n);
     }
 }
